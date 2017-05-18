@@ -17,6 +17,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView mUrlDisplayData;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
         /*
          * Iterate through the array and append the Strings to the TextView. The reason why we add
          * the "\n\n\n" after the String is to give visual separation between each String in the
@@ -42,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
         //for (String dummyFilmDay : dummyFilmData) {
         //    mFilmTextView.append(dummyFilmDay + "\n\n");
         //}
-
 
 
     }
