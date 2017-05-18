@@ -1,9 +1,11 @@
 package com.example.admin.movietheatrept1;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
+import com.example.admin.movietheatrept1.utils.MovieDataJSON;
 import com.example.admin.movietheatrept1.utils.NetworkUtils;
 
 import java.io.IOException;
@@ -27,40 +29,8 @@ public class MainActivity extends AppCompatActivity {
 
         mUrlDisplayData = (TextView) findViewById(R.id.tv_url_display);
 
-        /*
-         * This String array contains dummy film data. Later in the course, we're going to get
-         * real weather data. For now, we want to get something on the screen as quickly as
-         * possible, so we'll display this dummy data.
-         */
-        //String[] dummyFilmData = {
-             //   "Iron Man, May 17",
-             //  "Iron Man, May 17",
-             //   "Iron Man, May 17",
-             //   "Iron Man, May 17",
-             //   "Iron Man, May 17",
-             //   "Iron Man, May 17",
-            //    "Iron Man, May 17",
-            //    "Iron Man, May 17",
-            //    "Iron Man, May 17",
-            //    "Iron Man, May 17",
-           //     "Iron Man, May 17",
-          //      "Iron Man, May 17",
-         //       "Iron Man, May 17",
-         //       "Iron Man, May 17",
-        //        "Iron Man, May 17",
-        //        "Iron Man, May 17",
-        //        "Iron Man, May 17",
-        //        "Iron Man, May 17",
-        //        "Iron Man, May 17",
-        //        "Iron Man, May 17",
-        //        "Iron Man, May 17",
-        //        "Iron Man, May 17",
-        //        "Iron Man, May 17",
-        //        "Iron Man, May 17",
-        //        "Iron Man, May 17",
-        //};
+        loadMovieData();
 
-        makeMovieSearchQuery();
 
 
 
@@ -77,16 +47,47 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void makeMovieSearchQuery() {
-        URL movieSearchUrl = NetworkUtils.buildUrl();
-        mUrlDisplayData.setText(movieSearchUrl.toString());
-        String movieSearchResults = null;
-        try {
-            movieSearchResults = NetworkUtils.getResponseFromHttpUrl(movieSearchUrl);
-            mUrlDisplayData.setText(movieSearchResults);
-        } catch (IOException e) {
-            e.printStackTrace();
+    public class MovieQueryTask extends AsyncTask<String, Void, String[]> {
+
+        // COMPLETED (2) Override the doInBackground method to perform the query. Return the results. (Hint: You've already written the code to perform the query)
+        @Override
+        protected String[] doInBackground(String... params) {
+            String movieSearchResults = null;
+            URL movieSearchUrl = NetworkUtils.buildUrl();
+            try {
+                String jsonMovieResponse = NetworkUtils
+                        .getResponseFromHttpUrl(movieSearchUrl);
+
+                String[] simpleJsonMovieData = MovieDataJSON
+                        .getMovieDataStringsFromJson(MainActivity.this, jsonMovieResponse);
+
+                return simpleJsonMovieData;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        // COMPLETED (7) Override the onPostExecute method to display the results of the network request
+        @Override
+        protected void onPostExecute(String[] movieData) {
+            if (movieData != null) {
+                /*
+                 * Iterate through the array and append the Strings to the TextView. The reason why we add
+                 * the "\n\n\n" after the String is to give visual separation between each String in the
+                 * TextView. Later, we'll learn about a better way to display lists of data.
+                 */
+                for (String movieString : movieData) {
+                    mFilmTextView.append(movieString);
+                }
+            }
         }
     }
+
+    private void loadMovieData() {
+        new MovieQueryTask().execute();
+    }
+
 
 }

@@ -15,9 +15,21 @@ import java.util.Scanner;
 public class NetworkUtils {
 
     final static String MOVIE_BASE_URL =
-            "http://image.tmdb.org/t/p/";
+            "http://api.themoviedb.org/3/movie/popular?api_key=c13604c96bab2582efa77bde0ddff06b";
 
-    final static String SIZE_QUERY = "w185";
+    final static String QUERY_RESULTS = "results";
+
+    final static String QUERY_TITLE = "title";
+
+    final static String QUERY_ID = "id";
+
+    final static String QUERY_POSTER = "poster_path";
+
+    final static String QUERY_OVERVIEW = "overview";
+
+    final static String QUERY_RELEASE_DATE = "release_date";
+
+    final static String QUERY_RATE = "vote_average";
 
     /*
      * The sort field. One of stars, forks, or updated.
@@ -34,7 +46,12 @@ public class NetworkUtils {
     public static URL buildUrl() {
         // COMPLETED (1) Fill in this method to build the proper Movie query URL
         Uri builtUri = Uri.parse(MOVIE_BASE_URL).buildUpon()
-                .appendQueryParameter(SIZE_QUERY, null)
+                .appendQueryParameter(QUERY_RESULTS, QUERY_ID)
+                .appendQueryParameter(QUERY_RESULTS, QUERY_POSTER)
+                .appendQueryParameter(QUERY_RESULTS, QUERY_OVERVIEW)
+                .appendQueryParameter(QUERY_RESULTS, QUERY_RELEASE_DATE)
+                .appendQueryParameter(QUERY_RESULTS, QUERY_TITLE)
+                .appendQueryParameter(QUERY_RESULTS, QUERY_RATE)
                 //.appendQueryParameter(PARAM_SORT, sortBy)
                 .build();
 
