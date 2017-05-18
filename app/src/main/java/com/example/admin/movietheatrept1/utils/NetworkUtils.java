@@ -62,7 +62,7 @@ public class NetworkUtils {
 
         try {
             url = new URL(builtUri.toString());
-            Log.i("BUILT URL: ", url.toString());
+             Log.i("BUILT URL: ", url.toString());
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
