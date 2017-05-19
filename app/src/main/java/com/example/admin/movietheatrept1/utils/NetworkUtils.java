@@ -34,7 +34,7 @@ public class NetworkUtils {
 
     final static String QUERY_KEY = "c13604c96bab2582efa77bde0ddff06b";
 
-    final static String QUERY_API = "?api_key=";
+    final static String QUERY_API = "api_key";
 
     /*
      * The sort field. One of stars, forks, or updated.
