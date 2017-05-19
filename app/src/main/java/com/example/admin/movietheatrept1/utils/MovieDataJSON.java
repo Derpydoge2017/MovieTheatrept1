@@ -36,7 +36,6 @@ public final class MovieDataJSON {
         final String MOVIE_RELEASE = "release_date";
         final String MOVIE_RATE = "vote_average";
 
-        /* String array to hold each day's movie String */
         String[] parsedMovieData = null;
 
         JSONObject movieJson = new JSONObject(movieJsonStr);
