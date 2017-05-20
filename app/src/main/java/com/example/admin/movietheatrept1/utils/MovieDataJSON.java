@@ -56,15 +56,13 @@ public final class MovieDataJSON {
             /* Get the JSON object for the movie */
             JSONObject movieToday = movieArray.getJSONObject(i);
 
-            JSONObject movieObject =
-                    movieToday.getJSONArray(MOVIE_LIST).getJSONObject(0);
-                    movieReleaseDate = movieObject.getString(MOVIE_RELEASE);
-                    movieId = movieObject.getString(MOVIE_ID);
-                    moviePosterPath = movieObject.getString(MOVIE_POSTER);
-                    movieTitle = movieObject.getString(MOVIE_TITLE);
-                    movieRate = movieObject.getString(MOVIE_RATE);
-                    movieOverview = movieObject.getString(MOVIE_OVERVIEW);
-
+            // Extract relevant JSON fields
+            movieReleaseDate = movieToday.getString(MOVIE_RELEASE);
+            movieId = movieToday.getString(MOVIE_ID);
+            moviePosterPath = movieToday.getString(MOVIE_POSTER);
+            movieTitle = movieToday.getString(MOVIE_TITLE);
+            movieRate = movieToday.getString(MOVIE_RATE);
+            movieOverview = movieToday.getString(MOVIE_OVERVIEW);
 
             parsedMovieData[i] = "Title : " + movieTitle + " ," + "Release Date : " + movieReleaseDate + " ," + "Rate : " + movieRate;
         }

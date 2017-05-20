@@ -1,56 +1,96 @@
 package com.example.admin.movietheatrept1;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.TextView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.Toast;
 
 import com.example.admin.movietheatrept1.utils.MovieDataJSON;
 import com.example.admin.movietheatrept1.utils.NetworkUtils;
 
-import java.io.IOException;
 import java.net.URL;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MovieAdapter.MovieAdapterOnClickHandler {
 
-    private TextView mFilmTextView;
-
-    private TextView mUrlDisplayData;
-
+    private RecyclerView mRecyclerView;
+    private MovieAdapter mMovieAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie);
+
         /*
-         * Using findViewById, we get a reference to our TextView from xml. This allows us to
-         * do things like set the text of the TextView.
+         * Using findViewById, we get a reference to our RecyclerView from xml. This allows us to
+         * do things like set the adapter of the RecyclerView and toggle the visibility.
          */
-        mFilmTextView = (TextView) findViewById(R.id.tv_film_data);
+        mRecyclerView = (RecyclerView) findViewById(R.id.rv_numbers);
 
-        mUrlDisplayData = (TextView) findViewById(R.id.tv_url_display);
 
+        /*
+         * LinearLayoutManager can support HORIZONTAL or VERTICAL orientations. The reverse layout
+         * parameter is useful mostly for HORIZONTAL layouts that should reverse for right to left
+         * languages.
+         */
+        LinearLayoutManager layoutManager
+                = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+
+        mRecyclerView.setLayoutManager(layoutManager);
+
+        /*
+         * Use this setting to improve performance if you know that changes in content do not
+         * change the child layout size in the RecyclerView
+         */
+        mRecyclerView.setHasFixedSize(true);
+
+        /*
+         * The MovieAdapter is responsible for linking our movie data with the Views that
+         * will end up displaying our movie data.
+         */
+        mMovieAdapter = new MovieAdapter((MovieAdapter.MovieAdapterOnClickHandler) this);
+
+        /* Setting the adapter attaches it to the RecyclerView in our layout. */
+        mRecyclerView.setAdapter(mMovieAdapter);
+
+        /* Once all of our views are setup, we can load the weather data. */
         loadMovieData();
+    }
 
+    /**
+     * This method will get the user's preferred location for weather, and then tell some
+     * background method to get the weather data in the background.
+     */
+    private void loadMovieData() {
+        showWeatherDataView();
+        new MovieQueryTask().execute();
+    }
 
+    /**
+     * This method is overridden by our MainActivity class in order to handle RecyclerView item
+     * clicks.
+     *
+     * @param movieForDay The weather for the day that was clicked
+     */
+    @Override
+    public void onClick(String movieForDay) {
+        Context context = this;
+        Toast.makeText(context, movieForDay, Toast.LENGTH_SHORT)
+                .show();
+    }
 
-
-
-        /*
-         * Iterate through the array and append the Strings to the TextView. The reason why we add
-         * the "\n\n\n" after the String is to give visual separation between each String in the
-         * TextView. Later, we'll learn about a better way to display lists of data.
-         */
-        //for (String dummyFilmDay : dummyFilmData) {
-        //    mFilmTextView.append(dummyFilmDay + "\n\n");
-        //}
-
+    private void showWeatherDataView() {
+        /* Make sure the weather data is visible */
+        mRecyclerView.setVisibility(View.VISIBLE);
+    }
 
     }
 
     public class MovieQueryTask extends AsyncTask<String, Void, String[]> {
 
-        // COMPLETED (2) Override the doInBackground method to perform the query. Return the results. (Hint: You've already written the code to perform the query)
         @Override
         protected String[] doInBackground(String... params) {
             String movieSearchResults = null;
@@ -70,19 +110,10 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        // COMPLETED (7) Override the onPostExecute method to display the results of the network request
         @Override
         protected void onPostExecute(String[] movieData) {
             if (movieData != null) {
-                /*
-                 * Iterate through the array and append the Strings to the TextView. The reason why we add
-                 * the "\n\n\n" after the String is to give visual separation between each String in the
-                 * TextView. Later, we'll learn about a better way to display lists of data.
-                 */
-                for (String movieString : movieData) {
-                    mFilmTextView.append(movieString);
-                }
-            }
+                mMovieAdapter.setMovieData(movieData);
         }
     }
 
