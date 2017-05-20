@@ -87,7 +87,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         mRecyclerView.setVisibility(View.VISIBLE);
     }
 
-    }
 
     public class MovieQueryTask extends AsyncTask<String, Void, String[]> {
 
@@ -114,12 +113,14 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         protected void onPostExecute(String[] movieData) {
             if (movieData != null) {
                 mMovieAdapter.setMovieData(movieData);
+            }
         }
+
+        private void loadMovieData() {
+            new MovieQueryTask().execute();
+        }
+
+
     }
-
-    private void loadMovieData() {
-        new MovieQueryTask().execute();
-    }
-
-
 }
+
